@@ -17,62 +17,92 @@ class NovatekElectro:
         self.Connect()
 
     def Connect(self):
-        r = requests.get(self._url+'/api/login?device_info').json()
+        try:
+            r = requests.get(self._url+'/api/login?device_info').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
 
         prefix = self.models.get(r["device_id"])
 
-        r = requests.get(self._url+'/api/login?salt').json()
+        try:
+            r = requests.get(self._url+'/api/login?salt').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
 
         sha_1 = hashlib.sha1()
         sha_1.update(str(prefix+self._password+r["SALT"]).encode('utf-8'))
-        r = requests.get(self._url+'/api/login?login='+sha_1.hexdigest()).json()
+        try:
+            r = requests.get(self._url+'/api/login?login='+sha_1.hexdigest()).json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
 
         self._endpoint = self._url + '/' + r["SID"]
 
     def Voltage(self):
-        r = requests.get(self._endpoint+'/api/all/get?volt_msr').json()
+        try:
+            r = requests.get(self._endpoint+'/api/all/get?volt_msr').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
         return float(r["volt_msr"])/10
 
     def Current(self):
-        r = requests.get(self._endpoint+'/api/all/get?cur_msr').json()
+        try:
+            r = requests.get(self._endpoint+'/api/all/get?cur_msr').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
         return float(r["cur_msr"])/100
 
     def Frequency(self):
-        r = requests.get(self._endpoint+'/api/all/get?freq_msr').json()
+        try:
+            r = requests.get(self._endpoint+'/api/all/get?freq_msr').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
         return float(r["freq_msr"])/100
 
     def ActivePower(self):
-        r = requests.get(self._endpoint+'/api/all/get?powa_msr').json()
+        try:
+            r = requests.get(self._endpoint+'/api/all/get?powa_msr').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
         return float(r["powa_msr"])
 
     def FullPower(self):
-        r = requests.get(self._endpoint+'/api/all/get?pows_msr').json()
+        try:
+            r = requests.get(self._endpoint+'/api/all/get?pows_msr').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
         return float(r["pows_msr"])
 
     def ActiveEnergy(self):
-        r = requests.get(self._endpoint+'/api/all/get?enrga_msr').json()
+        try:
+            r = requests.get(self._endpoint+'/api/all/get?enrga_msr').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
         return float(r["enrga_msr"])
 
     def FullEnergy(self):
-        r = requests.get(self._endpoint+'/api/all/get?enrgs_msr').json()
+        try:
+            r = requests.get(self._endpoint+'/api/all/get?enrgs_msr').json()
+        except json.JSONDecodeError as e:
+            print(f"jsonDecodeError: {r}, {e}")
         if "OK" != r["STATUS"]:
             raise ConnectionAbortedError
         return float(r["enrgs_msr"])
